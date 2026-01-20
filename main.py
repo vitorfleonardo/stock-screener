@@ -8,11 +8,17 @@ from dotenv import load_dotenv
 load_dotenv()
 
 stocks = [
+    # Ações (Stocks)
     'ITUB4', 'BBAS3', 'BPAC11', 'ROXO34', 'BBSE3', 'CXSE3', 'ITSA4', 'SOJA3', 
     'MDIA3', 'LREN3', 'AZZA3', 'VIVA3', 'GRND3', 'VULC3', 'EZTC3', 'JHSF3', 
     'LAVV3', 'RENT3', 'COGN3', 'RADL3', 'ODPV3', 'WEGE3', 'MILS3', 'GOAU4', 
     'KLBN4', 'VIVT3', 'EGIE3', 'EQTL3', 'ISAE4', 'AURE3', 'SBSP3', 'SAPR11', 
-    'BMOB3'
+    'BMOB3',
+    
+    # FIIs
+    'HGLG11', 'BTLG11', 'XPML11', 'ALZR11', 'VISC11', 'LVBI11', 'KNCR11', 
+    'KNRI11', 'TRXF11', 'HFOF11', 'HGBS11', 'PVBI11', 'BRCR11', 'GARE11', 
+    'MXRF11', 'GGRC11', 'BRCO11', 'MCCI11', 'HSML11', 'RBRR11', 'KNHF11'
 ]
 
 tickers_sa = [f"{t}.SA" for t in stocks]
