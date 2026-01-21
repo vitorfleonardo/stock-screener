@@ -3,7 +3,8 @@ name: Update Stock Prices
 on:
   workflow_dispatch:
   schedule:
-    - cron: '30 20 * * 1-5'
+    # 22:00 UTC = 19:00 BRT (pós-pregão)
+    - cron: '0 22 * * 1-5'
 
 jobs:
   run-script:

@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-stocks = [
+br_stocks = [
     # Ações (Stocks)
     'ITUB4', 'BBAS3', 'BPAC11', 'ROXO34', 'BBSE3', 'CXSE3', 'ITSA4', 'SOJA3', 
     'MDIA3', 'LREN3', 'AZZA3', 'VIVA3', 'GRND3', 'VULC3', 'EZTC3', 'JHSF3', 
@@ -21,7 +21,7 @@ stocks = [
     'MXRF11', 'GGRC11', 'BRCO11', 'MCCI11', 'HSML11', 'RBRR11', 'KNHF11'
 ]
 
-tickers_sa = [f"{t}.SA" for t in stocks]
+tickers_sa = [f"{t}.SA" for t in br_stocks]
 
 def update_sheet_bulk():
     dados = yf.download(tickers_sa, period="1d", group_by='ticker', auto_adjust=True)
@@ -41,7 +41,7 @@ def update_sheet_bulk():
         {
             os.getenv("GS_ABA"): df_final,
         },
-        os.getenv("GOOGLE_CREDENTIALS_PATH", "credentials.json")
+        os.getenv("GCP_CREDENTIALS_JSON", "credentials.json")
     )
 
 if __name__ == "__main__":
