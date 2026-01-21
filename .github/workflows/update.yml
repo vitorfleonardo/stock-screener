@@ -18,10 +18,8 @@ jobs:
         run: |
           echo "${{ secrets.ENV }}" > .env
 
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: '${{ secrets.GCP_CREDENTIALS_JSON }}'
+      - name: Criar credentials.json
+          echo "${{ secrets.GCP_CREDENTIALS_JSON }}" > credentials.json
 
       - name: Setup Python
         uses: actions/setup-python@v5
