@@ -44,7 +44,7 @@ def safe_get(info_dict, key, is_percent=False):
         return valor * 100
     
     if isinstance(valor, (int, float)):
-        round(valor, 2)
+        return round(valor, 2)
         
     return valor
 
@@ -106,10 +106,10 @@ def update_sheet_bulk():
             if ticker in dados_mercado.columns.levels[0]:
                 if not dados_mercado[ticker].empty:
                     try:
-                        val_close = float(dados_mercado[ticker]['Close'].iloc[0])
-                        val_open = float(dados_mercado[ticker]['Open'].iloc[0])
-                        val_high = float(dados_mercado[ticker]['High'].iloc[0])
-                        val_low = float(dados_mercado[ticker]['Low'].iloc[0])
+                        val_close = round(float(dados_mercado[ticker]['Close'].iloc[0]), 2)
+                        val_open = round(float(dados_mercado[ticker]['Open'].iloc[0]), 2)
+                        val_high = round(float(dados_mercado[ticker]['High'].iloc[0]), 2)
+                        val_low = round(float(dados_mercado[ticker]['Low'].iloc[0]), 2)
                         val_vol = int(dados_mercado[ticker]['Volume'].iloc[0])
                         
                         if not pd.isna(val_close): preco_close = val_close
