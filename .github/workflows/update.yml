@@ -30,4 +30,5 @@ jobs:
         env:
           GS_STOCK_SCREENER: ${{ secrets.GS_STOCK_SCREENER }}
           GS_ABA: ${{ secrets.GS_ABA }}
+          GOOGLE_CREDENTIALS_PATH: credentials.json
         run: python main.py

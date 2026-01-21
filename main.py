@@ -41,7 +41,7 @@ def update_sheet_bulk():
         {
             os.getenv("GS_ABA"): df_final,
         },
-        os.getenv("GCP_CREDENTIALS_JSON", "credentials.json")
+        os.getenv("GOOGLE_CREDENTIALS_PATH", "credentials.json")
     )
 
 if __name__ == "__main__":
