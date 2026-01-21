@@ -5,6 +5,7 @@ import random
 from load_to_sheets import carregar_dataframes_sheets
 import os
 from dotenv import load_dotenv
+from datetime import datetime
 
 load_dotenv()
 
@@ -41,8 +42,17 @@ def safe_get(info_dict, key, is_percent=False):
     # Se for porcentagem, multiplica
     if is_percent:
         return valor * 100
+    
+    if isinstance(valor, (int, float)):
+        round(valor, 2)
         
     return valor
+
+def format_timestamp(ts):
+    """Converte Timestamp Unix para data legível YYYY-MM-DD"""
+    if ts and isinstance(ts, (int, float)):
+        return datetime.fromtimestamp(ts).strftime('%Y-%m-%d')
+    return None
 
 def update_sheet_bulk():
     total_ativos = len(tickers_sa)
@@ -87,20 +97,27 @@ def update_sheet_bulk():
 
         try:
 
-            preco_close = 0.0
-            preco_open = 0.0
-            preco_high = 0.0
-            preco_low = 0.0
-            vol = 0
+            preco_close = None
+            preco_open = None
+            preco_high = None
+            preco_low = None
+            vol = None
 
             if ticker in dados_mercado.columns.levels[0]:
                 if not dados_mercado[ticker].empty:
                     try:
-                        preco_close = dados_mercado[ticker]['Close'].iloc[0]
-                        preco_open = dados_mercado[ticker]['Open'].iloc[0]
-                        preco_high = dados_mercado[ticker]['High'].iloc[0]
-                        preco_low = dados_mercado[ticker]['Low'].iloc[0]
-                        vol = dados_mercado[ticker]['Volume'].iloc[0]
+                        val_close = float(dados_mercado[ticker]['Close'].iloc[0])
+                        val_open = float(dados_mercado[ticker]['Open'].iloc[0])
+                        val_high = float(dados_mercado[ticker]['High'].iloc[0])
+                        val_low = float(dados_mercado[ticker]['Low'].iloc[0])
+                        val_vol = int(dados_mercado[ticker]['Volume'].iloc[0])
+                        
+                        if not pd.isna(val_close): preco_close = val_close
+                        if not pd.isna(val_open): preco_open = val_open
+                        if not pd.isna(val_high): preco_high = val_high
+                        if not pd.isna(val_low): preco_low = val_low
+                        if not pd.isna(val_vol): vol = val_vol
+                        
                     except:
                         pass
 
@@ -108,11 +125,11 @@ def update_sheet_bulk():
                 'Ativo': ticker.replace('.SA', ''),
 
                 # --- DADOS DE MERCADO ---
-                'Preço Atual': preco_close if preco_close != 0 else None,
-                'Abertura': preco_open if preco_open != 0 else None,
-                'Máxima': preco_high if preco_high != 0 else None,
-                'Mínima': preco_low if preco_low != 0 else None,
-                'Volume': vol, 
+                'Preço Atual': preco_close,
+                'Abertura': preco_open,
+                'Máxima': preco_high,
+                'Mínima': preco_low,
+                'Volume': vol,
                 'Média Volume (10d)': safe_get(info, 'averageVolume10days'),
                 'Beta': safe_get(info, 'beta'),
 
@@ -156,7 +173,7 @@ def update_sheet_bulk():
                 'Div. Yield %': safe_get(info, 'dividendYield', is_percent=True),
                 'Yield Anual (Trailing)': safe_get(info, 'trailingAnnualDividendYield', is_percent=True),
                 'Payout Ratio %': safe_get(info, 'payoutRatio', is_percent=True),
-                'Data Ex-Div': safe_get(info, 'exDividendDate'),
+                'Data Ex-Div': format_timestamp(safe_get(info, 'exDividendDate')),
 
                 # --- HISTÓRICO ---
                 'Máxima 52sem': safe_get(info, 'fiftyTwoWeekHigh'),
@@ -174,7 +191,7 @@ def update_sheet_bulk():
 
     df_final = pd.DataFrame(dataframe_stocks)
     df_final['Atualizado em'] = pd.Timestamp.now(tz='America/Sao_Paulo').strftime("%Y-%m-%d %H:%M")
-    df_final = df_final.fillna(0)
+    df_final = df_final.fillna("")
 
     carregar_dataframes_sheets(
         os.getenv("GS_STOCK_SCREENER"),
