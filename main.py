@@ -141,7 +141,6 @@ def update_sheet_bulk():
                 'P/L (Atual)': safe_get(info, 'trailingPE'),
                 'P/L (Projetado)': safe_get(info, 'forwardPE'),
                 'P/VP': safe_get(info, 'priceToBook'),
-                'PEG Ratio': safe_get(info, 'pegRatio'),
                 'P/S': safe_get(info, 'priceToSalesTrailing12Months'),
                 'EV/EBITDA': safe_get(info, 'enterpriseToEbitda'),
                 'EV/Receita': safe_get(info, 'enterpriseToRevenue'),
