@@ -1,4 +1,3 @@
-from matplotlib import pyplot as plt
 import yfinance as yf
 import pandas as pd
 import time
