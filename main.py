@@ -27,6 +27,23 @@ stocks_list = [
 ]
 tickers_sa = [f"{t}.SA" for t in stocks_list]
     
+def safe_get(info_dict, key, is_percent=False):
+    """
+    Tenta pegar a chave. 
+    Se não existir ou for None -> Retorna None (vazio).
+    Se existir -> Retorna o valor (multiplicado por 100 se for %).
+    """
+    valor = info_dict.get(key)
+    
+    # Se o valor for None, devolvemos None (para virar célula vazia no Excel)
+    if valor is None:
+        return None
+    
+    # Se for porcentagem, multiplica
+    if is_percent:
+        return valor * 100
+        
+    return valor
 
 def update_sheet_bulk():
     total_ativos = len(tickers_sa)
@@ -92,63 +109,63 @@ def update_sheet_bulk():
                 'Ativo': ticker.replace('.SA', ''),
 
                 # --- DADOS DE MERCADO ---
-                'Preço Atual': preco_close,
-                'Abertura': preco_open,
-                'Máxima': preco_high,
-                'Mínima': preco_low,
-                'Volume': vol,
-                'Média Volume (10d)': info.get('averageVolume10days', 0),
-                'Beta': info.get('beta', 0),
+                'Preço Atual': preco_close if preco_close != 0 else None,
+                'Abertura': preco_open if preco_open != 0 else None,
+                'Máxima': preco_high if preco_high != 0 else None,
+                'Mínima': preco_low if preco_low != 0 else None,
+                'Volume': vol, 
+                'Média Volume (10d)': safe_get(info, 'averageVolume10days'),
+                'Beta': safe_get(info, 'beta'),
 
                 # --- TENDÊNCIA (MÉDIAS MÓVEIS) --- 
-                'Média Móvel 50d': info.get('fiftyDayAverage', 0),  
-                'Média Móvel 200d': info.get('twoHundredDayAverage', 0), 
+                'Média Móvel 50d': safe_get(info, 'fiftyDayAverage'),
+                'Média Móvel 200d': safe_get(info, 'twoHundredDayAverage'),
 
                 # --- VALUATION (Múltiplos) ---
-                'P/L (Atual)': info.get('trailingPE', 0),
-                'P/L (Projetado)': info.get('forwardPE', 0),
-                'P/VP': info.get('priceToBook', 0),
-                'PEG Ratio': info.get('pegRatio', 0),
-                'P/S (Preço/Venda)': info.get('priceToSalesTrailing12Months', 0),
-                'EV/EBITDA': info.get('enterpriseToEbitda', 0),
-                'EV/Receita': info.get('enterpriseToRevenue', 0),
-                'Valor de Mercado': info.get('marketCap', 0),
-                'Enterprise Value': info.get('enterpriseValue', 0),
+                'P/L (Atual)': safe_get(info, 'trailingPE'),
+                'P/L (Projetado)': safe_get(info, 'forwardPE'),
+                'P/VP': safe_get(info, 'priceToBook'),
+                'PEG Ratio': safe_get(info, 'pegRatio'),
+                'P/S': safe_get(info, 'priceToSalesTrailing12Months'),
+                'EV/EBITDA': safe_get(info, 'enterpriseToEbitda'),
+                'EV/Receita': safe_get(info, 'enterpriseToRevenue'),
+                'Valor de Mercado': safe_get(info, 'marketCap'),
+                'Enterprise Value': safe_get(info, 'enterpriseValue'),
 
                 # --- DADOS POR AÇÃO (Fundamental) ---
-                'LPA (Lucro p/ Ação)': info.get('trailingEps', 0),      
-                'VPA (Valor Patrimonial p/ Ação)': info.get('bookValue', 0),
+                'LPA': safe_get(info, 'trailingEps'),      
+                'VPA': safe_get(info, 'bookValue'),
 
                 # --- EFICIÊNCIA & RENTABILIDADE ---
-                'ROE': (info.get('returnOnEquity', 0) or 0) * 100,
-                'ROA': (info.get('returnOnAssets', 0) or 0) * 100,
-                'Margem Líquida': (info.get('profitMargins', 0) or 0) * 100,
-                'Margem Operacional': (info.get('operatingMargins', 0) or 0) * 100,
-                'Margem Bruta': (info.get('grossMargins', 0) or 0) * 100,
-                'Cresc. Receita (yoy)': (info.get('revenueGrowth', 0) or 0) * 100,
-                'Cresc. Lucro (yoy)': (info.get('earningsGrowth', 0) or 0) * 100, # NOVO
+                'ROE': safe_get(info, 'returnOnEquity', is_percent=True),
+                'ROA': safe_get(info, 'returnOnAssets', is_percent=True),
+                'Margem Líquida': safe_get(info, 'profitMargins', is_percent=True),
+                'Margem Operacional': safe_get(info, 'operatingMargins', is_percent=True),
+                'Margem Bruta': safe_get(info, 'grossMargins', is_percent=True),
+                'Cresc. Receita (yoy)': safe_get(info, 'revenueGrowth', is_percent=True),
+                'Cresc. Lucro (yoy)': safe_get(info, 'earningsGrowth', is_percent=True),
 
                 # --- SAÚDE FINANCEIRA ---
-                'Caixa Total': info.get('totalCash', 0),
-                'Dívida Total': info.get('totalDebt', 0),
-                'EBITDA (12m)': info.get('ebitda', 0),                 
-                'Dívida/EBITDA': info.get('debtToEquity', 0),
-                'Liquidez Corrente': info.get('currentRatio', 0),
-                'Liquidez Imediata': info.get('quickRatio', 0),
+                'Caixa Total': safe_get(info, 'totalCash'),
+                'Dívida Total': safe_get(info, 'totalDebt'),
+                'EBITDA (12m)': safe_get(info, 'ebitda'),                 
+                'Dívida/EBITDA': safe_get(info, 'debtToEquity'),
+                'Liquidez Corrente': safe_get(info, 'currentRatio'),
+                'Liquidez Imediata': safe_get(info, 'quickRatio'),
 
                 # --- DIVIDENDOS ---
-                'Div. Yield %': (info.get('dividendYield', 0) or 0) * 100,
-                'Yield Anual (Trailing)': (info.get('trailingAnnualDividendYield', 0) or 0) * 100,
-                'Payout Ratio %': (info.get('payoutRatio', 0) or 0) * 100,
-                'Data Ex-Div': info.get('exDividendDate', 'N/A'),
+                'Div. Yield %': safe_get(info, 'dividendYield', is_percent=True),
+                'Yield Anual (Trailing)': safe_get(info, 'trailingAnnualDividendYield', is_percent=True),
+                'Payout Ratio %': safe_get(info, 'payoutRatio', is_percent=True),
+                'Data Ex-Div': safe_get(info, 'exDividendDate'),
 
                 # --- HISTÓRICO ---
-                'Máxima 52sem': info.get('fiftyTwoWeekHigh', 0),
-                'Mínima 52sem': info.get('fiftyTwoWeekLow', 0),
+                'Máxima 52sem': safe_get(info, 'fiftyTwoWeekHigh'),
+                'Mínima 52sem': safe_get(info, 'fiftyTwoWeekLow'),
                 
                 # --- CONSENSO ---
-                'Preço Alvo Médio': info.get('targetMeanPrice', 0),
-                'Recomendação': info.get('recommendationKey', 'N/A').upper()
+                'Preço Alvo Médio': safe_get(info, 'targetMeanPrice'),
+                'Recomendação': info.get('recommendationKey', 'N/A').upper() if info.get('recommendationKey') else 'N/A'
             }
             dataframe_stocks.append(dados_ativo)
 
