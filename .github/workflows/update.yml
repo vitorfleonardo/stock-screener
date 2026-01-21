@@ -19,6 +19,7 @@ jobs:
           echo "${{ secrets.ENV }}" > .env
 
       - name: Criar credentials.json
+        run: |
           echo "${{ secrets.GCP_CREDENTIALS_JSON }}" > credentials.json
 
       - name: Setup Python
