@@ -6,6 +6,7 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+credentials_path = os.getenv("GOOGLE_CREDENTIALS_PATH")
 
 br_stocks = [
     # Ações (Stocks)
@@ -41,7 +42,7 @@ def update_sheet_bulk():
         {
             os.getenv("GS_ABA"): df_final,
         },
-        os.getenv("GOOGLE_APPLICATION_CREDENTIALS", "credentials.json")
+        credentials_path
     )
 
 if __name__ == "__main__":
