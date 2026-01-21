@@ -123,6 +123,9 @@ def update_sheet_bulk():
 
             dados_ativo = {
                 'Ativo': ticker.replace('.SA', ''),
+                'Nome': info.get('shortName', 'N/A'),           
+                'Setor': info.get('sector', 'N/A'),             
+                'Indústria': info.get('industry', 'N/A'),       
 
                 # --- DADOS DE MERCADO ---
                 'Preço Atual': preco_close,
