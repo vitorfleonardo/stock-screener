@@ -14,14 +14,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Criar .env a partir do Secret
-        run: |
-          echo "${{ secrets.ENV }}" > .env
-
-      - name: Criar credentials.json
-        run: |
-          echo "${{ secrets.GCP_CREDENTIALS_JSON }}" > credentials.json
-
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -31,5 +23,12 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Create credentials file
+        run: echo '${{ secrets.GCP_CREDENTIALS_JSON }}' > credentials.json
+
       - name: Run script
+        env:
+          GS_STOCK_SCREENER: ${{ secrets.GS_STOCK_SCREENER }}
+          GS_ABA: ${{ secrets.GS_ABA }}
+          GOOGLE_CREDENTIALS_PATH: credentials.json
         run: python main.py
