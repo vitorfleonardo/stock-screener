@@ -18,7 +18,7 @@ stocks_list = [
     'MDIA3', 'LREN3', 'AZZA3', 'VIVA3', 'GRND3', 'VULC3', 'EZTC3', 'JHSF3', 
     'LAVV3', 'RENT3', 'COGN3', 'RADL3', 'ODPV3', 'WEGE3', 'MILS3', 'GOAU4', 
     'KLBN4', 'VIVT3', 'EGIE3', 'EQTL3', 'ISAE4', 'AURE3', 'SBSP3', 'SAPR11', 
-    'BMOB3',
+    'BMOB3', 'GMAT3',
     
     # FIIs
     'HGLG11', 'BTLG11', 'XPML11', 'ALZR11', 'VISC11', 'LVBI11', 'KNCR11', 
@@ -183,7 +183,11 @@ def update_sheet_bulk():
                 
                 # --- CONSENSO ---
                 'Preço Alvo Médio': safe_get(info, 'targetMeanPrice'),
-                'Recomendação': info.get('recommendationKey', 'N/A').upper() if info.get('recommendationKey') else 'N/A'
+                'Recomendação': info.get('recommendationKey', 'N/A').upper() if info.get('recommendationKey') else 'N/A',
+                
+                # Adicionados depois
+                'Div. futuro (R$)': safe_get(info, 'dividendRate'),
+                'Div. histórico (R$)': safe_get(info, 'trailingAnnualDividendRate'),
             }
             dataframe_stocks.append(dados_ativo)
 
