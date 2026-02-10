@@ -57,3 +57,37 @@ def carregar_dataframes_sheets(
     """
     for aba, df in dataframes.items():
         carregar_dataframe(df, planilha_id, aba, credentials_path)
+
+# Adicione isso ao seu arquivo load_to_sheets.py
+
+def ler_dataframe_sheets(spreadsheet_id: str, aba: str, credentials_path: str) -> pd.DataFrame:
+    """
+    Lê os dados existentes na planilha para memória.
+    Retorna um DataFrame vazio se a aba não existir ou estiver vazia.
+    """
+    try:
+        scopes = ["https://www.googleapis.com/auth/spreadsheets"]
+        credentials = Credentials.from_service_account_file(credentials_path, scopes=scopes)
+        client = gspread.authorize(credentials)
+        
+        planilha = client.open_by_key(spreadsheet_id)
+        worksheet = planilha.worksheet(aba)
+        
+        # get_all_records retorna uma lista de dicionários
+        dados = worksheet.get_all_records()
+        
+        if not dados:
+            return pd.DataFrame()
+            
+        # Converte para DataFrame
+        df = pd.DataFrame(dados)
+        
+        # IMPORTANTE: O gspread pode trazer números como strings dependendo da formatação
+        # Tente converter colunas numéricas automaticamente
+        df = df.apply(pd.to_numeric)
+        
+        return df
+
+    except (gspread.exceptions.WorksheetNotFound, Exception):
+        # Se der erro ou não achar a aba, assume que não tem histórico
+        return pd.DataFrame()
