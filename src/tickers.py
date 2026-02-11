@@ -21,7 +21,7 @@ TICKERS_US = [
     'TFLO', 'USFR', 
     
     # REITs
-    'ADC', 'O', 'VICI', 'NNN', 'DLR'
+    'ADC', 'O', 'VICI', 'NNN', 'DLR', 'KIM', 'FR', 'CUBE'
 ]
 
 TICKERS_CRYPTO = ['BTC-USD']

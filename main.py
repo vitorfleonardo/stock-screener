@@ -6,7 +6,8 @@ from src.load_to_sheets import carregar_dataframes_sheets
 from src.tickers import ALL_TICKERS_YAHOO
 from src.info import organize_data
 from src.tesouro import get_tesouro_direto
-from bcb import currency
+from src.markowitz import get_optimized_portfolio
+from bcb import currency, sgs
 import os
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
@@ -32,30 +33,37 @@ def update_cotas():
     
     for ticker in ALL_TICKERS_YAHOO:
 
-        tentativa = 0
+        dados_para_uso = dados_mercado
         precisa_retry = False
 
-        if ticker not in dados_mercado.columns.levels[0]:
+        if ticker not in dados_para_uso.columns.levels[0]:
             precisa_retry = True
-        elif dados_mercado[ticker]['Close'].isna().all():
+        elif dados_para_uso[ticker]['Close'].isna().all():
             precisa_retry = True
+
+        if precisa_retry:
+            tentativa = 0
+            sucesso_retry = False
         
-        while tentativa < MAX_RETRIES and not precisa_retry:
-            tentativa += 1
-            try:
-                ticker_again = yf.download(
-                    tickers=ticker, 
-                    period="1d",
-                    auto_adjust=True,
-                    progress=False
-                )
-                if not ticker_again.empty and not ticker_again['Close'].isna().all():
-                    dados_mercado = pd.concat({ticker: ticker_again}, axis=1)
-                    precisa_retry = False
-            
-            except Exception as e:
-                tempo_backoff = 2 * tentativa
-                time.sleep(tempo_backoff)
+            while tentativa < MAX_RETRIES and not sucesso_retry:
+                tentativa += 1
+                try:
+                    ticker_again = yf.download(
+                        tickers=ticker, 
+                        period="1d",
+                        auto_adjust=True,
+                        progress=False
+                    )
+                    if not ticker_again.empty and not ticker_again['Close'].isna().all():
+                        dados_para_uso = pd.concat({ticker: ticker_again}, axis=1)
+                        precisa_retry = False
+                
+                except Exception as e:
+                    tempo_backoff = 2 * tentativa
+                    time.sleep(tempo_backoff)
+
+            if not sucesso_retry:
+                dataframe_stocks.append({'Ativo': ticker.replace('.SA', ''), 'Preço Atual': 0, 'Recomendação': 'ERRO_SCRIPT'})
 
         tempo_espera = random.uniform(2.1, 5.0)
         time.sleep(tempo_espera)
@@ -76,7 +84,7 @@ def update_cotas():
                 print(f"   -> Tentando novamente em {tempo_backoff}s...")
                 time.sleep(tempo_backoff)
         
-        dados_ativo = organize_data(ticker, info, dados_mercado)
+        dados_ativo = organize_data(ticker, info, dados_para_uso)
 
         if ( dados_ativo is None ): 
             print(f"ERRO DE PARSE em {ticker}")
@@ -120,7 +128,24 @@ def update_renda_fixa():
         "credentials.json"
     )
 
+def markowitz():
+
+    
+    selic = sgs.get({'Selic': 432}, last=1)
+    selic_percentual = selic['Selic'].iloc[-1]
+    selic_decimal = selic_percentual / 100       
+
+    df_markowitz = get_optimized_portfolio(ALL_TICKERS_YAHOO, selic_decimal)
+    print(df_markowitz)
+
+    # carregar_dataframes_sheets(
+    #     os.getenv("GS_STOCK_SCREENER"),
+    #     {"markowitz": df_markowitz},
+    #     "credentials.json"
+    # )
+
 if __name__ == "__main__":
         update_cotas()
         update_dloar_cotacao()
         update_renda_fixa()
+        # markowitz()
