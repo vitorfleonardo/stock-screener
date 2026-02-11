@@ -11,8 +11,6 @@ import os
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 
-import numpy as np
-
 load_dotenv()
 
 MAX_RETRIES = 3 
@@ -33,7 +31,32 @@ def update_cotas():
     dataframe_stocks = []
     
     for ticker in ALL_TICKERS_YAHOO:
-    
+
+        tentativa = 0
+        precisa_retry = False
+
+        if ticker not in dados_mercado.columns.levels[0]:
+            precisa_retry = True
+        elif dados_mercado[ticker]['Close'].isna().all():
+            precisa_retry = True
+        
+        while tentativa < MAX_RETRIES and not precisa_retry:
+            tentativa += 1
+            try:
+                ticker_again = yf.download(
+                    tickers=ticker, 
+                    period="1d",
+                    auto_adjust=True,
+                    progress=False
+                )
+                if not ticker_again.empty and not ticker_again['Close'].isna().all():
+                    dados_mercado = pd.concat({ticker: ticker_again}, axis=1)
+                    precisa_retry = False
+            
+            except Exception as e:
+                tempo_backoff = 2 * tentativa
+                time.sleep(tempo_backoff)
+
         tempo_espera = random.uniform(2.1, 5.0)
         time.sleep(tempo_espera)
 
@@ -98,6 +121,6 @@ def update_renda_fixa():
     )
 
 if __name__ == "__main__":
-        # update_cotas()
+        update_cotas()
         update_dloar_cotacao()
-        # update_renda_fixa()
+        update_renda_fixa()
