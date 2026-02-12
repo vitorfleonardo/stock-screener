@@ -6,7 +6,7 @@ from src.load_to_sheets import carregar_dataframes_sheets
 from src.tickers import ALL_TICKERS_YAHOO
 from src.info import organize_data
 from src.tesouro import get_tesouro_direto
-from src.markowitz import get_optimized_portfolio
+# from src.markowitz import get_optimized_portfolio
 from bcb import currency, sgs
 import os
 from dotenv import load_dotenv
@@ -128,15 +128,15 @@ def update_renda_fixa():
         "credentials.json"
     )
 
-def markowitz():
+# def markowitz():
 
     
-    selic = sgs.get({'Selic': 432}, last=1)
-    selic_percentual = selic['Selic'].iloc[-1]
-    selic_decimal = selic_percentual / 100       
+#     selic = sgs.get({'Selic': 432}, last=1)
+#     selic_percentual = selic['Selic'].iloc[-1]
+#     selic_decimal = selic_percentual / 100       
 
-    df_markowitz = get_optimized_portfolio(ALL_TICKERS_YAHOO, selic_decimal)
-    print(df_markowitz)
+#     df_markowitz = get_optimized_portfolio(ALL_TICKERS_YAHOO, selic_decimal)
+#     print(df_markowitz)
 
     # carregar_dataframes_sheets(
     #     os.getenv("GS_STOCK_SCREENER"),

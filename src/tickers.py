@@ -15,13 +15,13 @@ TICKERS_BR = [f"{t}.SA" for t in STOCKS_BR]
 
 TICKERS_US = [
     # Ações EUA
-    'RACE', 
+    'RACE', 'NFLX', 'META', 'AMZN',
     
     # ETF Bonds
     'TFLO', 'USFR', 
     
     # REITs
-    'ADC', 'O', 'VICI', 'NNN', 'DLR', 'KIM', 'FR', 'CUBE'
+    'ADC', 'O', 'VICI', 'NNN', 'DLR', 'KIM', 'FR', 'CUBE', 'EPR', 'LTC'
 ]
 
 TICKERS_CRYPTO = ['BTC-USD']
