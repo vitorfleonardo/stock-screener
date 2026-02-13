@@ -4,7 +4,7 @@ STOCKS_BR = [
     'MDIA3', 'LREN3', 'AZZA3', 'VIVA3', 'GRND3', 'VULC3', 'EZTC3', 'JHSF3', 
     'LAVV3', 'RENT3', 'COGN3', 'RADL3', 'ODPV3', 'WEGE3', 'MILS3', 'GOAU4', 
     'KLBN11', 'VIVT3', 'EGIE3', 'EQTL3', 'ISAE4', 'AURE3', 'SBSP3', 'SAPR11', 
-    'BMOB3', 'GMAT3',
+    'BMOB3', 'GMAT3', 'TECN3', 'PSSA3',
     
     # FIIs BR
     'HGLG11', 'BTLG11', 'XPML11', 'ALZR11', 'VISC11', 'LVBI11', 'KNCR11', 
@@ -15,13 +15,14 @@ TICKERS_BR = [f"{t}.SA" for t in STOCKS_BR]
 
 TICKERS_US = [
     # Ações EUA
-    'RACE', 'NFLX', 'META', 'AMZN',
+    'RACE', 'NFLX', 'META', 'AMZN', 
     
     # ETF Bonds
     'TFLO', 'USFR', 
     
     # REITs
-    'ADC', 'O', 'VICI', 'NNN', 'DLR', 'KIM', 'FR', 'CUBE', 'EPR', 'LTC'
+    'ADC', 'O', 'VICI', 'NNN', 'DLR', 'KIM', 'FR', 'CUBE', 'EPR', 'LTC',
+    'AMT', 'SILA', 'MAA'
 ]
 
 TICKERS_CRYPTO = ['BTC-USD']
