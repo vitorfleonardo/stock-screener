@@ -9,13 +9,15 @@ STOCKS_BR = [
     # FIIs BR
     'HGLG11', 'BTLG11', 'XPML11', 'ALZR11', 'VISC11', 'LVBI11', 'KNCR11', 
     'KNRI11', 'TRXF11', 'HFOF11', 'HGBS11', 'PVBI11', 'BRCR11', 'GARE11', 
-    'MXRF11', 'GGRC11', 'BRCO11', 'MCCI11', 'HSML11', 'RBRR11', 'KNHF11'
+    'MXRF11', 'GGRC11', 'BRCO11', 'MCCI11', 'HSML11', 'RBRR11', 'KNHF11', 
+    'SNAG11'
 ]
 TICKERS_BR = [f"{t}.SA" for t in STOCKS_BR]
 
 TICKERS_US = [
     # Ações EUA
-    'RACE', 'NFLX', 'META', 'AMZN', 
+    'RACE', 'NFLX', 'META', 'AMZN', 'DUOL', 'MSFT', 'CRM', 'PANW', 'NOW', 
+    'SNOW', 'CSU.TO',
     
     # ETF Bonds
     'TFLO', 'USFR', 
