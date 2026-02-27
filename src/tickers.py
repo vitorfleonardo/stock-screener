@@ -17,7 +17,7 @@ TICKERS_BR = [f"{t}.SA" for t in STOCKS_BR]
 TICKERS_US = [
     # Ações EUA
     'RACE', 'NFLX', 'META', 'AMZN', 'DUOL', 'MSFT', 'CRM', 'PANW', 'NOW', 
-    'SNOW', 'CSU.TO',
+    'SNOW', 'MELI', 'IBM', 'MA', 'INTU',
     
     # ETF Bonds
     'TFLO', 'USFR', 
